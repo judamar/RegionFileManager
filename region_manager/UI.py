@@ -6,7 +6,7 @@ prefix = conf.prefix
 
 help_head = """================== §b Region File Manager §r=================="""
 help_body = {
-    f"§b{prefix}": "§rDisplay this help message.",
+    f"§b{prefix}": "§rDisplay help message.",
     f"§b{prefix} export <x> <z> <dimension>": "§rShow the list of region files.",
     f"§b{prefix} remove <x> <z> <dimension>": "§rRemove the specified region file.",
 }
