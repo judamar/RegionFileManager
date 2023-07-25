@@ -5,14 +5,42 @@ from region_manager.UI import *
 
 conf = Configure
 
+def register_command(server: PluginServerInterface):
+    def get_literal_node(literal):
+        lvl = conf.minimum_permission_level
+        return Literal(literal).requires(lambda src: src.has_permission(lvl)).on_error(RequirementNotMet, lambda src: src.reply("permission denied"), handled=True)
+
+    server.register_command(
+        Literal(conf.prefix).
+        runs(lambda src: src.reply(gen_help_message())).
+        #on_error(UnknownArgument, print_unknown_argument_message, handled=True).
+        then(
+            get_literal_node('save')
+        ).
+        then(
+            get_literal_node('restore')
+        ).
+        then(
+            get_literal_node('remove')
+        ).
+        then(
+            get_literal_node('list').
+            runs(lambda src: list_regions(src))
+        ).
+        then(
+            get_literal_node('del').
+            runs(lambda src: delete_region(src))
+        )
+    )
+
 def print_msg(server: PluginServerInterface, msg, prefix="[RFM]"):
     msg = RTextList(prefix + msg)
     server.logger.info(msg)
     server.say(msg)
 
 def on_load(server: PluginServerInterface, old):
+    global conf
     conf = server.load_config_simple('config.json', target_class=Configure)
     msg = 'Plugin Region File Manager, use {}'.format(conf.prefix) 
     server.logger.info(msg)
-    help_message = gen_help_message()
-    server.register_command(Literal(conf.prefix).runs(lambda src: src.reply(help_message)))
+    register_command(server)
