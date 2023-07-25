@@ -4,7 +4,8 @@ from region_manager.config import Configure
 conf = Configure()
 prefix = conf.prefix
 
-help_head = """================== §b Region File Manager §r==================
+help_head = """
+==================§b Region File Manager §r==================
 """
 help_body = {
     f"§b{prefix}": "§rDisplay help message.",
@@ -23,3 +24,7 @@ def gen_help_message():
     for command, description in help_body.items():
         help_message.append(f"\n  {command} - {description}")
     return help_message
+
+def print_unknown_argument_message():
+    unknown_message = RText("Unknown argument.", color=RColor.red)
+    return unknown_message
