@@ -25,6 +25,6 @@ def gen_help_message():
         help_message.append(f"\n  {command} - {description}")
     return help_message
 
-def print_unknown_argument_message():
+def gen_unknown_argument_message():
     unknown_message = RText("Unknown argument.", color=RColor.red)
     return str(unknown_message)
