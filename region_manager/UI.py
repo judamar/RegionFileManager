@@ -16,6 +16,10 @@ help_body = {
     f"§b{prefix} del": "§rDelete a region from list."
 }
 
+list_head = """
+==================§b Region File List §r==================
+"""
+
 def gen_help_message():
     help_message = RTextList(
         RText(help_head),
@@ -28,3 +32,11 @@ def gen_help_message():
 def gen_unknown_argument_message():
     unknown_message = RText("Unknown argument.", color=RColor.red)
     return str(unknown_message)
+
+def gen_list_message(json_list):
+    list_message = RTextList(
+        RText(list_head),
+        RText("Saved regions:", color=RColor.yellow),
+    )
+    list_message.append(json_list)
+    return list_message
