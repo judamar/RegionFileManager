@@ -3,7 +3,10 @@ from mcdreforged.api.all import *
 from region_manager.config import Configure
 from region_manager.UI import *
 import json, os, shutil
+from typing import Any
 
+abort = False
+flag = False
 conf = Configure
 unknown_argument_msg = gen_unknown_argument_message()
 dst_path = conf.dst_path
@@ -78,6 +81,15 @@ def rm_file(file_path, server: PluginServerInterface):
     except OSError:
         server.logger.info("Error while removing file")
 
+def do_abort(src):
+    global abort
+    if flag:
+        abort = True
+
+def command_run(message: Any, text: Any, command: str) -> RTextBase:
+	fancy_text = message.copy() if isinstance(message, RTextBase) else RText(message)
+	return fancy_text.set_hover_text(text).set_click_event(RAction.run_command, command)
+
 #SAVE THE REGION
 def save_region(server, info, x, z, dim, name):
     if dim=="0":
@@ -106,21 +118,39 @@ def save_region(server, info, x, z, dim, name):
     except FileNotFoundError:
         print_msg(server, f"Region {region_name} does not exist.")
 
+@new_thread('RFM Restore')
 def restore_region(server, info, name):
     filename = str(json_mngr.get_value(name, "path"))
     src_path = str(json_mngr.get_value(name, "src_path"))
-
-    server.logger.info(f"restore file: {filename}")
-    #try:
-    server.logger.info(f"Restoring Region {name}")
-    rm_file(src_path, server)
-    server.logger.info(f"Region {src_path} deleted")
-    server.logger.info("Copying region")
-    shutil.copy(filename, src_path)
-    server.logger.info("Region restored")
-    #except Exception as ex:
-        #server.logger.info(ex)
     
+    server.logger.info(f"Restore file: {filename}")
+
+    global abort, flag
+    flag = True
+
+    for i in range(1, 10)[::-1]:
+        print_msg(server, command_run(f"Restore region §2{name}§r in §4{i}§rs. §4Click to abort.§r", "§4Click to abort.§r", f"{conf.prefix} abort"))
+        if abort:
+            abort = False
+            print_msg(server, "§4Restore region aborted§r")
+            return
+        sleep(1)
+
+    try:
+        server.logger.info(f"Restoring Region {name}")
+        server.stop()
+        server.wait_for_start()
+        rm_file(src_path, server)
+        server.logger.info(f"Region {src_path} deleted")
+        server.logger.info("Copying region")
+        shutil.copy(filename, src_path)
+        server.logger.info("Region restored")
+        server.start()
+    except Exception as ex:
+        server.error.info(ex)
+    finally:
+        abort = False
+        flag = False
 
 def remove_region(src_path:str, region_name:str, target_path:str):
     pass
@@ -166,6 +196,9 @@ def register_command(server: PluginServerInterface):
         then(
             get_literal_node('del').
             runs(lambda src: delete_region_from_saves(src))
+        ).
+        then(
+            get_literal_node('abort').runs(lambda src: do_abort(src))
         )
     )
 
