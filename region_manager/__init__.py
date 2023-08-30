@@ -79,7 +79,7 @@ def rm_file(file_path, server: PluginServerInterface):
     try:
         os.remove(file_path)
     except OSError:
-        server.logger.info("Error while removing file")
+        server.error.info("Error while removing file")
 
 def do_abort(src):
     global abort
@@ -152,8 +152,37 @@ def restore_region(server, info, name):
         abort = False
         flag = False
 
-def remove_region(src_path:str, region_name:str, target_path:str):
-    pass
+def remove_region(server, info, x, z, dim):
+    if dim=="0":
+        src_path = conf.regions_path_over
+    elif dim=="1":
+        src_path = conf.regions_path_end
+    elif dim == "-1":
+        src_path = conf.regions_path_nether
+
+    region_name = make_region_name(x, z)
+    file_src = src_path + region_name
+
+    global abort, flag
+    flag = True
+
+    for i in range(1, 10)[::-1]:
+        print_msg(server, command_run(f"Deleting region §3{x} {z}§r in §4{i}§rs. §4Click to abort.§r", "§4Click to abort.§r", f"{conf.prefix} abort"))
+        if abort:
+            abort = False
+            print_msg(server, "§4Restore region aborted§r")
+            return
+        sleep(1)
+
+    try:
+        server.stop()
+        server.wait_for_start()
+        server.logger.info(f"Deleting region {file_src} from world.")
+        rm_file(file_src, server)
+        server.logger.info(f"Region §3{x} {z}§r deleted from world.")
+        server.start()
+    except Exception as ex:
+        server.error.info(ex)
 
 def delete_region_from_saves():
     pass
@@ -186,7 +215,9 @@ def register_command(server: PluginServerInterface):
         then(
             get_literal_node('remove').
             then(
-                Text("name")
+                Integer("x").
+                then(Integer("z").
+                then(Text("dim").runs(lambda src, ctx: remove_region(src.get_server(), src, ctx["x"], ctx["z"], ctx["dim"]))))
             )
         ).
         then(
@@ -200,6 +231,7 @@ def register_command(server: PluginServerInterface):
         then(
             get_literal_node('abort').runs(lambda src: do_abort(src))
         )
+        
     )
 
 #|PRINT MESSAGE|
