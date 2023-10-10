@@ -51,6 +51,15 @@ class json_mngr():
         value = data.get(key)
         subvalue = value.get(subkey)
         return subvalue
+    
+    def delete(key):
+        path_json = f'./{dst_path}/regions.json'
+        with open(path_json, 'r') as archivo:
+            data = json.load(archivo)
+        if key in data:
+            del data[key]
+        with open(path_json, 'w') as archivo:
+            json.dump(data, archivo, indent=4)
 
 #CHECK IF FOLDERS ARE ALREADY CREATED
 def check_folders_created(server: PluginServerInterface):
@@ -118,6 +127,7 @@ def save_region(server, info, x, z, dim, name):
     except FileNotFoundError:
         print_msg(server, f"Region {region_name} does not exist.")
 
+#RESTORE REGION
 @new_thread('RFM Restore')
 def restore_region(server, info, name):
     filename = str(json_mngr.get_value(name, "path"))
@@ -152,6 +162,8 @@ def restore_region(server, info, name):
         abort = False
         flag = False
 
+#REMOVE REGION FROM MAP
+@new_thread('RFM remove')
 def remove_region(server, info, x, z, dim):
     if dim=="0":
         src_path = conf.regions_path_over
@@ -184,8 +196,16 @@ def remove_region(server, info, x, z, dim):
     except Exception as ex:
         server.error.info(ex)
 
-def delete_region_from_saves():
-    pass
+#DELETE REGION FROM SAVES
+def delete_region_from_saves(server, info, name):
+    print_msg(server, f"§7Deleting region {name} from saves.§r")
+    file_src = json_mngr.get_value(name, "path")
+    try:
+        rm_file(file_src, server)
+        json_mngr.delete(name)
+        print_msg(server, f"§2Region {name} deleted from saves.§r")
+    except json.JSONDecodeError:
+        server.error.info("JSON Decode Drror")
 
 #|REGISTER COMMANDS|    
 def register_command(server: PluginServerInterface):
@@ -226,7 +246,9 @@ def register_command(server: PluginServerInterface):
         ).
         then(
             get_literal_node('del').
-            runs(lambda src: delete_region_from_saves(src))
+            then(
+                Text("name").runs(lambda src, ctx: delete_region_from_saves(src.get_server(), src, ctx["name"]))
+            )
         ).
         then(
             get_literal_node('abort').runs(lambda src: do_abort(src))
