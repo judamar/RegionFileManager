@@ -17,5 +17,4 @@ class Configure(Serializable):
     dst_path_over: str = './regions_folder/overworld/'
     dst_path_nether: str = './regions_folder/nether/'
     dst_path_end: str = './regions_folder/end/'
-    do_backup_before_something: bool = True
     minimum_permission_level: int = 3
