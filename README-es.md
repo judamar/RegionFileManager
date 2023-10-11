@@ -12,10 +12,10 @@ El plugin Region File Manager (RFM) es una herramienta útil para gestionar regi
 El plugin RFM añade los siguientes comandos:
 
 - `!!rfm save <x> <z> <dim> <name>`: Guarda una región en una nueva carpeta.
-- `!!rfm restore <nombre>`: Restaura la región especificada.
+- `!!rfm restore <name>`: Restaura la región especificada.
 - `!!rfm remove <x> <z> <dim>`: Elimina del mundo el archivo de región especificado.
 - `!!rfm list`: Mostrar una lista de las regiones guardadas.
-- `!!rfm del <nombre>`: Elimina una región de la lista.
+- `!!rfm del <name>`: Elimina una región de la lista.
 - `!!rfm abort`: Abortar una operación de restauración en curso.
 
 ## Configuración

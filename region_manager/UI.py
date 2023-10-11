@@ -13,7 +13,8 @@ help_body = {
     f"§b{prefix} restore <name>": "§rRestore the specified region.",
     f"§b{prefix} remove <x> <z> <dimension>": "§rRemove the specified region file from world.",
     f"§b{prefix} list": "§rShow a list with the regions saved.",
-    f"§b{prefix} del": "§rDelete a region from list."
+    f"§b{prefix} del <name>": "§rDelete a region from list.",
+    f"§b{prefix} abort": "§rAbort a currently running restoration operation."
 }
 
 list_head = """
