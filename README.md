@@ -18,6 +18,10 @@ The RFM plugin adds the following commands:
 - `!!rfm del <name>`: Delete a region from the list.
 - `!!rfm abort`: Abort a currently running restoration operation.
 
+`1`: for the end.
+`0`: for the overworld.
+`-1`: for the nether.
+
 ## Configuration
 
 You can configure the plugin's behavior in the `config.json` file with the following options:

@@ -18,6 +18,10 @@ El plugin RFM añade los siguientes comandos:
 - `!!rfm del <name>`: Elimina una región de la lista.
 - `!!rfm abort`: Abortar una operación de restauración en curso.
 
+`1`: para el end.
+`0`: para el overworld.
+`-1`: para el nether.
+
 ## Configuración
 
 Puedes configurar el comportamiento del plugin en el fichero `config.json` con las siguientes opciones:
