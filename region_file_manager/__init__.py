@@ -1,7 +1,7 @@
 from time import sleep
 from mcdreforged.api.all import *
-from region_manager.config import Configure
-from region_manager.UI import *
+from region_file_manager.config import Configure
+from region_file_manager.UI import *
 import json, os, shutil
 from typing import Any
 
@@ -270,3 +270,4 @@ def on_load(server: PluginServerInterface, old):
     check_folders_created(server)
     server.logger.info(msg)
     register_command(server)
+    server.logger.info("Plugin FRM loaded")

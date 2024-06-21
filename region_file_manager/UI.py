@@ -1,5 +1,5 @@
 from mcdreforged.api.rtext import RTextList, RText, RColor
-from region_manager.config import Configure
+from region_file_manager.config import Configure
 
 conf = Configure()
 prefix = conf.prefix
