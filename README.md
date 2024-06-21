@@ -1,6 +1,8 @@
 English | [Español](README-es.md)
 # Region File Manager (RFM)
 
+[![GitHub downloads](https://img.shields.io/github/downloads/judamar/RegionFileManager/total?label=Github%20downloads&logo=github)](https://github.com/judamar/RegionFileManager/releases)
+
 This is a plugin for [MCDReforged](https://github.com/Fallen-Breath/MCDReforged) that allows you to manage region files on a Minecraft server.
 
 ## Description
