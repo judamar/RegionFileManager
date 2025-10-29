@@ -24,23 +24,23 @@ class json_mngr():
         }
         path_json = f'./{dst_path}/regions.json'
         if os.path.exists(path_json):
-            with open(path_json, "r") as archivo:
-                data = json.load(archivo)
+            with open(path_json, "r") as file:
+                data = json.load(file)
         else:
             data = {}
         data.update(new_data)
-        with open(path_json, "w") as archivo:
-            json.dump(data, archivo, indent=4)
+        with open(path_json, "w") as file:
+            json.dump(data, file, indent=4)
 
-    def list_json_file():
+    def list_json_file(self):
         path_json = f'./{dst_path}/regions.json'
-        with open(path_json, "r") as archivo:
-            data = json.load(archivo)
+        with open(path_json, "r") as file:
+            data = json.load(file)
         result = ""
-        for clave, valor in data.items():
-            path = valor.get("path")
-            dim = valor.get("dim")
-            result += (f"\n  §bReg. Name:§r {clave} §bPath:§r {path} §bDimension:§r {dim}")
+        for key, value in data.items():
+            path = value.get("path")
+            dim = value.get("dim")
+            result += (f"\n  §bRegion:§r {key} §bPath:§r {path} §bDimension:§r {dim}")
         return result
 
     
@@ -96,8 +96,8 @@ def do_abort(src):
         abort = True
 
 def command_run(message: Any, text: Any, command: str) -> RTextBase:
-	fancy_text = message.copy() if isinstance(message, RTextBase) else RText(message)
-	return fancy_text.set_hover_text(text).set_click_event(RAction.run_command, command)
+    fancy_text = message.copy() if isinstance(message, RTextBase) else RText(message)
+    return fancy_text.set_hover_text(text).set_click_event(RAction.run_command, command)
 
 #SAVE THE REGION
 def save_region(server, info, x, z, dim, name):
